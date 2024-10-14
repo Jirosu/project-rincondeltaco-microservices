@@ -26,5 +26,5 @@ select * from products;
 select * from products_category;
 
 insert into products_category values (null, 'category 1');
-insert into products values (null, 'prod 1', 'description prod 1', 10.90, 'img/path', 1, 1);
-insert into products values (null, 'prod 2', 'description prod 2', 10.90, 'img/path', 1, 0);
+insert into products values (null, 'prod 1', 'description prod 1', 10.90, '/img/incakola.png', 1, 1);
+insert into products values (null, 'prod 2', 'description prod 2', 10.90, '/img/botella_agua.png', 1, 0);
