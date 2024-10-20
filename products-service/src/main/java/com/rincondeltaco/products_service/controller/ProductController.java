@@ -1,4 +1,4 @@
-package com.rincondeltaco.products_service.controler;
+package com.rincondeltaco.products_service.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,10 +20,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/producto")
@@ -44,6 +41,15 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(producto);
         }
         return ResponseEntity.ok(producto);
+    }
+
+    @PostMapping("/listar-precios")
+    public ResponseEntity<List<Double>> getPricesProducts(@RequestBody List<Integer> productsIds) {
+        List<Double> listadoPrecio = productService.getListOfPricesByIds(productsIds);
+        if (listadoPrecio.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(listadoPrecio);
+        }
+        return ResponseEntity.ok(listadoPrecio);
     }
 
     @GetMapping("/img/{image}")

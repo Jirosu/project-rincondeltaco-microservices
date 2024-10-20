@@ -7,6 +7,7 @@ import com.rincondeltaco.products_service.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,14 @@ public class ProductService {
     public Producto getProductById(int id) {
         Optional<Producto> product = productRepository.findById(id);
         return product.orElse(null);
+    }
+
+    public List<Double> getListOfPricesByIds(List<Integer> productsIds) {
+        List<Double> precios = new ArrayList<>();
+        for(int id : productsIds) {
+            precios.add(productRepository.findPrecProdByCodProd(id));
+        }
+        return precios;
     }
 
     public Producto addProduct(Producto producto) {

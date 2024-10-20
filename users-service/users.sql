@@ -14,5 +14,5 @@ CREATE TABLE users (
 
 DESCRIBE users;
 select * from users;
-
-insert into users values (null, 'Jimmy', 'N', 'jn@gmail.com', '123456', 'admin');
+                                                                /*password: 123456*/
+insert into users values (null, 'Jimmy', 'N', 'jn@gmail.com', '$2a$10$tiQcMlUJXoKAUAs7i6uFwuXAe8y0Ou11ucXm8TsEHzZ4tP2MyIdhy', 'Administrador');
