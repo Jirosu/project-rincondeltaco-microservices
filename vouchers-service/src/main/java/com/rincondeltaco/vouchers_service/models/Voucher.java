@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class Voucher {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_voucher;
     @Temporal(TemporalType.DATE)
     private Date date_voucher;
