@@ -1,5 +1,6 @@
 package com.rincondeltaco.users_service.service;
 
+import com.rincondeltaco.users_service.models.LoginUsuario;
 import com.rincondeltaco.users_service.models.Usuario;
 import com.rincondeltaco.users_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,8 @@ public class UserService {
 
         return usuEnc == null ? false : true;
     }
-
-
-    public Usuario loginUsuarioObj(Usuario u) {
+    
+    public Usuario loginUsuarioObj(LoginUsuario u) {
         Usuario userEncontrado = userRepository.findByEmail(u.getEmail());
         if(userEncontrado == null) {
             System.out.println("usuario no encontrado + user: "+ userEncontrado);

@@ -85,12 +85,11 @@ public class PedidoService {
         List<Double> precios = getPrecioProductos(productosPedido);
 
         for (int i = 0; i < productosPedido.size(); i++) {
-            total += productosPedido.get(i).getCantidad() * precios.get(i);
+            subtotal += productosPedido.get(i).getCantidad() * precios.get(i);
         }
-        total += delivery;
 
-        igv = total * 0.18;
-        subtotal = total - igv;
+        igv = subtotal * 0.18;
+        total = delivery + subtotal;
 
         pedido.setSubtotal(subtotal);
         pedido.setIgv(igv);

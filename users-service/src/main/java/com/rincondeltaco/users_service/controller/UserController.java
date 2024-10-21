@@ -2,6 +2,7 @@ package com.rincondeltaco.users_service.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rincondeltaco.users_service.models.LoginUsuario;
 import com.rincondeltaco.users_service.models.Usuario;
 import com.rincondeltaco.users_service.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -49,10 +50,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Usuario ususario) throws JsonProcessingException{
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginUsuario loginUser) throws JsonProcessingException{
         Map<String, Object> response = new HashMap<>();
 
-        Usuario user = userService.loginUsuarioObj(ususario);
+        Usuario user = userService.loginUsuarioObj(loginUser);
         if(user == null){
             response.put("valor", false);
             response.put("msg", "Credenciales Incorrectas");

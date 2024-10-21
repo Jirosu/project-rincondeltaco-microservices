@@ -32,7 +32,6 @@ public class PedidoController {
 
     @PostMapping("/crear")
     public ResponseEntity<Pedido> createPedido(@RequestBody PedidoRequest request) {
-
         return ResponseEntity.ok(pedidoService.addPedido(request));
     }
 
