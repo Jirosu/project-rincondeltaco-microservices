@@ -121,24 +121,20 @@ public class ProductController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Map<String, Object>> editProduct(@RequestParam("data") String data) throws JsonProcessingException {
+    public ResponseEntity<Map<String, Object>> editProduct(@RequestBody Producto producto) throws JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
 
-        Producto prod = new ObjectMapper().readValue(data, Producto.class);
+        System.out.println(producto);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String prodJson = objectMapper.writeValueAsString(prod);
-        System.out.println(prodJson);
-
-        if (prod == null) {
+        if (producto == null) {
             response.put("valor", false);
             response.put("msg", "Error al ingresar el producto");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        productService.editProduct(prod);
+        productService.editProduct(producto);
         response.put("valor", true);
-        response.put("msg", prod.getNomProd() + " fue editado exitosamente!");
+        response.put("msg", producto.getNomProd() + " fue editado exitosamente!");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

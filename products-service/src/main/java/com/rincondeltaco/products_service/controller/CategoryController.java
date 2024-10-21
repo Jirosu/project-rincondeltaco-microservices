@@ -1,4 +1,4 @@
-package com.rincondeltaco.products_service.controler;
+package com.rincondeltaco.products_service.controller;
 
 import com.rincondeltaco.products_service.models.Categoria;
 import com.rincondeltaco.products_service.service.CategoryService;

@@ -32,32 +32,27 @@ public class UserController {
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<Map<String, Object>> registrar(@RequestParam("data") String data) throws JsonProcessingException {
+    public ResponseEntity<Map<String, Object>> registrar(@RequestBody Usuario ususario) throws JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
-        Usuario usu = new ObjectMapper().readValue(data, Usuario.class);
+        System.out.println(ususario);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String usuJson = objectMapper.writeValueAsString(usu);
-        System.out.println(usuJson);
-
-        if (usu == null) {
+        if (ususario == null) {
             response.put("valor", false);
             response.put("msg", "Error al registrar el usuario");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        userService.guardarUsuario(usu);
+        userService.guardarUsuario(ususario);
         response.put("valor", true);
-        response.put("msg", "El usuario " + usu.getNomUsu() + " fue registrado exitosamente!");
+        response.put("msg", "El usuario " + ususario.getNomUsu() + " fue registrado exitosamente!");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestParam("data") String data) throws JsonProcessingException{
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Usuario ususario) throws JsonProcessingException{
         Map<String, Object> response = new HashMap<>();
-        Usuario usu = new ObjectMapper().readValue(data, Usuario.class);
 
-        Usuario user = userService.loginUsuarioObj(usu);
+        Usuario user = userService.loginUsuarioObj(ususario);
         if(user == null){
             response.put("valor", false);
             response.put("msg", "Credenciales Incorrectas");
@@ -68,6 +63,7 @@ public class UserController {
         response.put("msg", "Bienvenido " + user.getNomUsu() + "!");
         response.put("name", user.getNomUsu() + " " + user.getApeUsu());
         response.put("rol", user.getRolUsu());
+        response.put("id", user.getCodUsu());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -78,23 +74,20 @@ public class UserController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Map<String, Object>> actualizar(@RequestParam("data") String data) throws JsonProcessingException {
+    public ResponseEntity<Map<String, Object>> actualizar(@RequestBody Usuario ususario) throws JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
-        Usuario usu = new ObjectMapper().readValue(data, Usuario.class);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String usuJson = objectMapper.writeValueAsString(usu);
-        System.out.println(usuJson);
+        System.out.println(ususario);
 
-        if (usu == null) {
+        if (ususario == null) {
             response.put("valor", false);
             response.put("msg", "Error al editar el usuario");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        userService.guardarUsuario(usu);
+        userService.guardarUsuario(ususario);
         response.put("valor", true);
-        response.put("msg", "El usuario " + usu.getNomUsu() + " fue actualizado exitosamente!");
+        response.put("msg", "El usuario " + ususario.getNomUsu() + " fue actualizado exitosamente!");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
