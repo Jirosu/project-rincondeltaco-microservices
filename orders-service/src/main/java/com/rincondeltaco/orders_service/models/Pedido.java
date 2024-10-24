@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -52,9 +51,5 @@ public class Pedido {
         this.telefonoEntrega = telefonoEntrega;
         this.direccionEntrega = direccionEntrega;
         this.distritoEntrega = distritoEntrega;
-    }
-
-    public Pedido(int idPedido) {
-        this.idPedido = idPedido;
     }
 }

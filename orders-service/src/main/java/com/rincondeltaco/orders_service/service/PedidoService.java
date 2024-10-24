@@ -3,6 +3,7 @@ package com.rincondeltaco.orders_service.service;
 import com.rincondeltaco.orders_service.models.DetallePedido;
 import com.rincondeltaco.orders_service.models.Pedido;
 import com.rincondeltaco.orders_service.models.PedidoRequest;
+import com.rincondeltaco.orders_service.models.VoucherRequest;
 import com.rincondeltaco.orders_service.models.dto.DetallePedidoDTO;
 import com.rincondeltaco.orders_service.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class PedidoService {
     private RestTemplate restTemplate;
 
     private final String PRODUCT_SERVICE_URL = "http://localhost:8082/producto/listar-precios";
+    private final String VOUCHER_SERVICE_URL = "http://localhost:8085/voucher/crear";
 
 
     public List<Pedido> getPedidos() {
@@ -43,9 +45,28 @@ public class PedidoService {
 
         Pedido pedidoGuardado = pedidoRepository.save(pedido);
 
-        saveOrderDetails(getDetallePedido(request.getListaProductos(), pedidoGuardado.getIdPedido()));
+        saveDetallePedido(request.getListaProductos(), pedidoGuardado.getIdPedido());
+        generateComprobante(request, pedidoGuardado);
 
         return pedidoGuardado;
+    }
+
+    public Pedido calculatePedido(Pedido pedido, List<DetallePedidoDTO> productosPedido) {
+        double subtotal = 0, igv = 0, total = 0, delivery = 15;
+
+        List<Double> precios = getPrecioProductos(productosPedido);
+
+        for (int i = 0; i < productosPedido.size(); i++) {
+            subtotal += productosPedido.get(i).getCantidad() * precios.get(i);
+        }
+
+        igv = subtotal * 0.18;
+        total = delivery + subtotal;
+
+        pedido.setSubtotal(subtotal);
+        pedido.setIgv(igv);
+        pedido.setTotal(total);
+        return pedido;
     }
 
     public List<Double> getPrecioProductos(List<DetallePedidoDTO> productosPedido) {
@@ -75,29 +96,20 @@ public class PedidoService {
 
             detallePedidos.add(detPed);
         }
-
         return detallePedidos;
     }
 
-    public Pedido calculatePedido(Pedido pedido, List<DetallePedidoDTO> productosPedido) {
-        double subtotal = 0, igv = 0, total = 0, delivery = 15;
-
-        List<Double> precios = getPrecioProductos(productosPedido);
-
-        for (int i = 0; i < productosPedido.size(); i++) {
-            subtotal += productosPedido.get(i).getCantidad() * precios.get(i);
-        }
-
-        igv = subtotal * 0.18;
-        total = delivery + subtotal;
-
-        pedido.setSubtotal(subtotal);
-        pedido.setIgv(igv);
-        pedido.setTotal(total);
-        return pedido;
+    public void saveDetallePedido(List<DetallePedidoDTO> productosPedidoDTO, int pedidoID) {
+        List<DetallePedido> productosPedido = getDetallePedido(productosPedidoDTO, pedidoID);
+        productosPedido.forEach( prodPedido -> detallePedidoService.addDetallePedido(prodPedido));
     }
 
-    public void saveOrderDetails(List<DetallePedido> productosPedido) {
-        productosPedido.forEach( prodPedido -> detallePedidoService.addDetallePedido(prodPedido));
+    public void generateComprobante(PedidoRequest request, Pedido pedidoGuardado) {
+        VoucherRequest voucher = new VoucherRequest(pedidoGuardado.getFechaPedido(), pedidoGuardado.getSubtotal(),
+                pedidoGuardado.getIgv(), pedidoGuardado.getTotal(), pedidoGuardado.getIdUsuario(),
+                request.getDatosVoucher().getDocument_type_Cli(), request.getDatosVoucher().getNum_document_Cli(),
+                request.getDatosVoucher().getVoucher_type(), pedidoGuardado.getIdPedido());
+
+        restTemplate.postForEntity(VOUCHER_SERVICE_URL, voucher, VoucherRequest.class);
     }
 }
